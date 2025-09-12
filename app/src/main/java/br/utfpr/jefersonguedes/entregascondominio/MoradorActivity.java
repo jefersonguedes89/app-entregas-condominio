@@ -14,7 +14,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -22,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import br.utfpr.jefersonguedes.entregascondominio.modelo.Genero;
+import br.utfpr.jefersonguedes.entregascondominio.modelo.Morador;
 import br.utfpr.jefersonguedes.entregascondominio.utils.UtilsAlert;
 
 

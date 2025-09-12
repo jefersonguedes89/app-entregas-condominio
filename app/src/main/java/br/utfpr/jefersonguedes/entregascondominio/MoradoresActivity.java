@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
@@ -30,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import br.utfpr.jefersonguedes.entregascondominio.modelo.Genero;
+import br.utfpr.jefersonguedes.entregascondominio.modelo.Morador;
 import br.utfpr.jefersonguedes.entregascondominio.utils.UtilsAlert;
 
 public class MoradoresActivity extends AppCompatActivity {
