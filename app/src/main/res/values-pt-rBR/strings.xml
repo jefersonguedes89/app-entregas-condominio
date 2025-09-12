@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EntregasCondominio</string>
+    <string name="cadastro_morador">Cadastro de Morador</string>
+    <string name="nome">Nome: </string>
+    <string name="informe_nome">Informe o nome do morador: </string>
+    <string name="genero">Gênero: </string>
+    <string name="masculino">Masculino</string>
+    <string name="feminino">Feminino</string>
+    <string name="apt_alugado">Apartamento Alugado? </string>
+    <string name="sim">Sim</string>
+    <string name="numero_apt">Número do apartamento: </string>
+    <string name="informe_o_num_apt">Informe o número do apartamento: </string>
+    <string name="selecione_blocos">Qual é o bloco do morador? </string>
+    <string name="marque_apt_alugado">O apartamento é alugado? </string>
+
+    <string name="bloco1">Bloco 1</string>
+    <string name="bloco2">Bloco 2</string>
+    <string name="bloco3">Bloco 3</string>
+    <string name="bloco4">Bloco 4</string>
+    <string name="bloco5">Bloco 5</string>
+    <string name="salvar">Salvar</string>
+    <string name="limpar">Limpar</string>
+    <string name="os_campos_foram_limpos">Os campos foram limpos!</string>
+    <string name="por_favor_digite_o_nome_do_morador">Por favor digite o nome do morador</string>
+    <string name="por_favor_digite_o_n_mero_do_apartamento">Por favor digite o número do Apartamento!</string>
+    <string name="por_favor_informe_o_g_nero_do_morador">Por favor, informe o gênero do morador!</string>
+    <string name="nao">Não</string>
+    <string name="o_n_mero_deve_ser_um_inteiro">O número deve ser um inteiro!</string>
+    <string name="n_o_permitido_valores_menores_que_zero">Não é permitido valores menores que zero!</string>
+    <string name="n_o_foi_carregado_o_spinner_com_os_blocos">Não foi carregado o spinner com os blocos!</string>
+    <string name="morador">Morador \"</string>
+    <string name="foi_clicado">\"Foi clicado</string>
+    <string name="logo_da_utfpr">Logo da UTFPR</string>
+    <string name="entregas_no_comindominio">Entregas no Condomínio</string>
+    <string name="autoria">Autor: Jeferson Guedes</string>
+    <string name="sobre">Sobre</string>
+    <string name="moradores">Moradores</string>
+    <string name="adicionar">Adicionar</string>
+    <string name="novo_morador">Novo morador</string>
+    <string name="site_utfpr"><a href = "https://www.utfpr.edu.br/">Site UTFPR</a></string>
+    <string name="email">jefersonguedes89@gmail.com</string>
+    <string name="nenhum_app_para_abrir_p_ginas_web">Nenhum app para abrir páginas web</string>
+    <string name="sobre_o_app">Aplicativo para cadastro de entregas no condomínio, onde se é possível cadastrar moradores e associar os mesmos com entregas</string>
+    <string name="cursoPos">Curso de Especialização em Java</string>
+    <string name="editar">Editar</string>
+    <string name="excluir">Excluir</string>
+    <string name="editar_morador">Editar morador</string>
+    <string name="sugerir_tipo">Sugerir Tipo</string>
+    <string name="sugerir_bloco">Sugerir Bloco</string>
+    <string name="ordenacao">Ordenação</string>
+    <string name="restaurar_padroes">Restaurar Padrões</string>
+    <string name="as_configuracoes_voltaram_ao_padrao_de_instalacao">As configurações voltaram ao padrão de instalação</string>
+    <string name="nome_utfpr_por_extenso">UNIVERSIDADE TECNOLÓGICA FEDERAL DO PARANÁ</string>
+    <string name="aviso">Warning</string>
+    <string name="ok">OK</string>
+    <string name="o_nome_nao_pode_ter_mais_que_80_caracteres">The name cannot be longer than 80 characters!</string>
+    <string name="confirmacao">Confirmação</string>
+    <string name="deseja_apagar">Deseja apagar?\n\"%1$s"\"</string>
+    <string name="desaja_limpar_padroes">Deseja restaurar para o padrão?</string>
+    <string name="desfazer">Desfazer</string>
+    <string name="alteracao_realizada">Alteração realizada</string>
+    <string name="erro_conversao_tipos">Erro de conversão de tipos!</string>
+</resources>

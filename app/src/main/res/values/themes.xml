@@ -1,0 +1,17 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.ThemeStylesIcons" parent="Theme.Material3.Light">
+        <!-- Customize your light theme here. -->
+         <item name="colorPrimary">@color/amarelo</item>
+         <item name="colorPrimaryVariant">@color/amarelo_escuro</item>
+         <item name="colorOnPrimary">@color/preto</item>
+
+
+        <item name="android:textColorLink">@color/azul_escuro</item>
+
+
+    </style>
+
+
+    <color name="corSelecionada">@color/amarelo_tranparente</color>
+</resources>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="blocos">
+        <item>@string/bloco1</item>
+        <item>@string/bloco2</item>
+        <item>@string/bloco3</item>
+        <item>@string/bloco4</item>
+        <item>@string/bloco5</item>
+    </string-array>
+
+    <string-array name="moradores_nome">
+        <item>Jeferson Guedes</item>
+        <item>Tatiane Severo</item>
+        <item>Lucas Silva</item>
+        <item>Pedro Bala</item>
+        <item>João Galetto</item>
+        <item>Maria Constantina</item>
+        <item>Sebastian Feltrin Souza</item>
+        <item>Pedro Paulo</item>
+        <item>Rubens Alves</item>
+        <item>José Erivan</item>
+
+    </string-array>
+
+    <integer-array name="moradores_num_apt">
+        <item>30</item>
+        <item>31</item>
+        <item>32</item>
+        <item>33</item>
+        <item>34</item>
+        <item>35</item>
+        <item>36</item>
+        <item>37</item>
+        <item>38</item>
+        <item>39</item>
+    </integer-array>
+
+    <integer-array name="moradores_apt_alugado">
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+    </integer-array>
+
+    <integer-array name="moradores_num_bloco">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </integer-array>
+
+
+    <integer-array name="moradores_genero">
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+
+
+
+    </integer-array>
+
+</resources>

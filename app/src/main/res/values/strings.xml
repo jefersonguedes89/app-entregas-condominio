@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name" translatable="false">EntregasCondominio</string>
+
+    <string name="site_utfpr" translatable="false"><a href = "https://www.utfpr.edu.br/">Site UTFPR</a></string>
+    <string name="email" translatable="false">jefersonguedes89@gmail.com</string>
+    <string name="cadastro_morador">"Resident Registration "</string>
+    <string name="nome">" Name:"</string>
+    <string name="informe_nome">"Enter the resident's name: "</string>
+    <string name="genero">Gender:</string>
+    <string name="masculino">Masculine</string>
+    <string name="feminino">Feminine</string>
+    <string name="apt_alugado">"Apartment Rented? "</string>
+    <string name="sim">Yes</string>
+    <string name="numero_apt">Apartment number:</string>
+    <string name="informe_o_num_apt">Enter the apartment number:</string>
+    <string name="marque_apt_alugado">Is the apartment rented?</string>
+    <string name="selecione_blocos">What is the resident\'s block?</string>
+    <string name="bloco2">Block 2</string>
+    <string name="bloco1">Block 1</string>
+    <string name="bloco3">Block 3</string>
+    <string name="bloco4">Block 4</string>
+    <string name="bloco5">Block 5</string>
+    <string name="salvar">Save</string>
+    <string name="os_campos_foram_limpos">The fields have been cleared!</string>
+    <string name="limpar">"To clean "</string>
+    <string name="por_favor_digite_o_nome_do_morador">Please enter the resident\'s name</string>
+    <string name="por_favor_informe_o_g_nero_do_morador">"Please inform the gender of the resident! "</string>
+    <string name="por_favor_digite_o_n_mero_do_apartamento">Please enter the Apartment number!</string>
+    <string name="nao">No</string>
+    <string name="o_n_mero_deve_ser_um_inteiro">The number must be an integer!</string>
+    <string name="n_o_foi_carregado_o_spinner_com_os_blocos">The spinner was not loaded with blocks!</string>
+    <string name="n_o_permitido_valores_menores_que_zero">Values less than zero are not allowed!</string>
+    <string name="morador">Resident \"</string>
+    <string name="foi_clicado">\"It was clicked</string>
+    <string name="logo_da_utfpr">UTFPR Logo</string>
+    <string name="entregas_no_comindominio">Deliveries to the Condominium</string>
+    <string name="autoria">Author: Jeferson Guedes</string>
+    <string name="sobre">About</string>
+    <string name="moradores">Residents</string>
+    <string name="adicionar">"To add "</string>
+    <string name="novo_morador">"New resident "</string>
+    <string name="nenhum_app_para_abrir_p_ginas_web">No app to open web pages</string>
+    <string name="sobre_o_app">Application for registering deliveries in the condominium, where it is possible to register residents and associate them with deliveries</string>
+    <string name="cursoPos">Java Specialization Course</string>
+    <string name="editar">Edit</string>
+    <string name="excluir">Delete</string>
+    <string name="editar_morador">Edit resident</string>
+    <string name="sugerir_tipo">Suggest Type</string>
+    <string name="sugerir_bloco">Suggest Block</string>
+    <string name="ordenacao">Ordering</string>
+    <string name="restaurar_padroes">Restore Defaults</string>
+    <string name="as_configuracoes_voltaram_ao_padrao_de_instalacao">Settings returned to installation default</string>
+    <string name="nome_utfpr_por_extenso">FEDERAL UNIVERSITY OF TECHNOLOGY - PARANÁ</string>
+    <string name="aviso">Warning</string>
+    <string name="ok">OK</string>
+    <string name="o_nome_nao_pode_ter_mais_que_80_caracteres">The name cannot be longer than 80 characters!</string>
+    <string name="confirmacao">Confirmation</string>
+    <string name="deseja_apagar">Do you want to delete?\n\"%1$s"\"</string>
+    <string name="desaja_limpar_padroes">Do you want do restore defaults?</string>
+    <string name="desfazer">Undo</string>
+    <string name="alteracao_realizada">Data update done</string>
+    <string name="erro_conversao_tipos">Type conversion error!</string>
+
+
+</resources>
