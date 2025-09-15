@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import br.utfpr.jefersonguedes.entregascondominio.modelo.Morador;
+
 public class MoradorAdapter extends BaseAdapter {
 
     private Context context;

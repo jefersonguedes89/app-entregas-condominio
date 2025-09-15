@@ -1,9 +1,14 @@
-package br.utfpr.jefersonguedes.entregascondominio;
+package br.utfpr.jefersonguedes.entregascondominio.modelo;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import java.util.Comparator;
+import java.util.Objects;
 
+@Entity
 public class Morador implements Cloneable{
 
     public static Comparator <Morador> ordenacaoCrescente = new Comparator<Morador> () {
@@ -22,6 +27,11 @@ public class Morador implements Cloneable{
         }
     };
 
+    @PrimaryKey(autoGenerate = true)
+    private long id;
+
+    @NonNull
+    @ColumnInfo(index = true)
     private String nome;
 
     private int numApt;
@@ -39,6 +49,14 @@ public class Morador implements Cloneable{
         this.aptAlugado = aptAlugado;
         this.bloco = bloco;
         this.genero = genero;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -81,13 +99,35 @@ public class Morador implements Cloneable{
         this.genero = genero;
     }
 
+
+
+
+
+
     @NonNull
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
 
 
 
         return super.clone();
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Morador morador = (Morador) o;
+        return numApt == morador.numApt
+                && aptAlugado == morador.aptAlugado
+                && bloco == morador.bloco
+                && nome.equals(morador.nome)
+                && genero == morador.genero;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nome, numApt, aptAlugado, bloco, genero);
     }
 
     @Override

@@ -14,7 +14,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -22,21 +21,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import br.utfpr.jefersonguedes.entregascondominio.modelo.Genero;
+import br.utfpr.jefersonguedes.entregascondominio.modelo.Morador;
+import br.utfpr.jefersonguedes.entregascondominio.persistencia.MoradoresDatabase;
 import br.utfpr.jefersonguedes.entregascondominio.utils.UtilsAlert;
 
 
 public class MoradorActivity extends AppCompatActivity {
 
-    public static final String KEY_NOME = "KEY_NOME";
-    public static final String KEY_NUM = "KEY_NUM";
-    public static final String KEY_ALUGADO = "KEY_ALUGADO";
-    public static final String KEY_BLOCO = "KEY_BLOCO";
-    public static final String KEY_GENERO = "KEY_GENERO";
+//    public static final String KEY_NOME = "KEY_NOME";
+//    public static final String KEY_NUM = "KEY_NUM";
+//    public static final String KEY_ALUGADO = "KEY_ALUGADO";
+//    public static final String KEY_BLOCO = "KEY_BLOCO";
+//    public static final String KEY_GENERO = "KEY_GENERO";
+
+
+
     public static final String KEY_MODO = "KEY_MODO";
-
+    public static final String KEY_ID = "ID";
     public static final String KEY_SUGERIR_TIPO = "SUGERIR_TIPO";
-
-
     public static final String KEY_ULTIMO_TIPO = "ULTIMO_TIPO";
     public static final int MODO_NOVO = 0;
 
@@ -90,30 +93,35 @@ public class MoradorActivity extends AppCompatActivity {
             }else{
                 setTitle(getString(R.string.editar_morador));
 
-                String nome = bundle.getString(MoradorActivity.KEY_NOME);
-                int numApt = bundle.getInt(MoradorActivity.KEY_NUM);
-                boolean aptAlugado = bundle.getBoolean(MoradorActivity.KEY_ALUGADO);
-                int bloco = bundle.getInt(MoradorActivity.KEY_BLOCO);
-                String generoTexto = bundle.getString(MoradorActivity.KEY_GENERO);
+                long id = bundle.getLong(KEY_ID);
 
-                Genero genero = Genero.valueOf(generoTexto);
+                MoradoresDatabase database = MoradoresDatabase.getInstance(this);
 
-                moradorOriginal = new Morador(nome, numApt, aptAlugado, bloco, genero);
+                moradorOriginal = database.getMoradorDao().queryForId(id);
+
+//                String nome = bundle.getString(MoradorActivity.KEY_NOME);
+//                int numApt = bundle.getInt(MoradorActivity.KEY_NUM);
+//                boolean aptAlugado = bundle.getBoolean(MoradorActivity.KEY_ALUGADO);
+//                int bloco = bundle.getInt(MoradorActivity.KEY_BLOCO);
+//                String generoTexto = bundle.getString(MoradorActivity.KEY_GENERO);
+//                moradorOriginal = new Morador(nome, numApt, aptAlugado, bloco, genero);
 
 
 
-                editTextNome.setText(nome);
-                editTextNumApt.setText(String.valueOf(numApt));
-                checkBoxAptAlugado.setChecked(aptAlugado);
-                spinnerBlocos.setSelection(bloco);
+                editTextNome.setText(moradorOriginal.getNome());
+                editTextNumApt.setText(String.valueOf(moradorOriginal.getNumApt()));
+                checkBoxAptAlugado.setChecked(moradorOriginal.isAptAlugado());
+                spinnerBlocos.setSelection(moradorOriginal.getBloco());
+
+                Genero genero = moradorOriginal.getGenero();
 
                 if(genero == Genero.Masculino){
                     radioButtonMasc.setChecked(true);
                 } else {
                     radioButtonFem.setChecked(true);
                 }
-
-
+                editTextNome.requestFocus();
+                editTextNome.setSelection(editTextNome.getText().length());
             }
 
         }
@@ -273,29 +281,64 @@ public class MoradorActivity extends AppCompatActivity {
 
         boolean aptAlugado = checkBoxAptAlugado.isChecked();
 
-        if(modo == MODO_EDITAR &&
-           nome.equalsIgnoreCase(moradorOriginal.getNome()) &&
-           numApt == moradorOriginal.getNumApt() &&
-           aptAlugado == moradorOriginal.isAptAlugado() &&
-           bloco == moradorOriginal.getBloco() &&
-           genero == moradorOriginal.getGenero()){
+        Morador morador = new Morador(nome, numApt, aptAlugado, bloco, genero);
 
+        if(morador.equals(moradorOriginal)){
             setResult(MoradorActivity.RESULT_CANCELED);
             finish();
             return;
-
         }
 
-        salvarUltimoTipo(bloco);
+
+
+//        if(modo == MODO_EDITAR &&
+//           nome.equalsIgnoreCase(moradorOriginal.getNome()) &&
+//           numApt == moradorOriginal.getNumApt() &&
+//           aptAlugado == moradorOriginal.isAptAlugado() &&
+//           bloco == moradorOriginal.getBloco() &&
+//           genero == moradorOriginal.getGenero()){
+//            setResult(MoradorActivity.RESULT_CANCELED);
+//            finish();
+//           return;
+//        }
 
 
         Intent intentResposta = new Intent();
 
-        intentResposta.putExtra(KEY_NOME, nome);
-        intentResposta.putExtra(KEY_NUM, numApt);
-        intentResposta.putExtra(KEY_ALUGADO, aptAlugado);
-        intentResposta.putExtra(KEY_BLOCO, bloco);
-        intentResposta.putExtra(KEY_GENERO, genero.toString());
+        MoradoresDatabase moradoresDatabase = MoradoresDatabase.getInstance(this);
+        if(modo == MODO_NOVO){
+           long novoId =  moradoresDatabase.getMoradorDao().insert(morador);
+
+           if(novoId <= 0) {
+               UtilsAlert.mostrarAviso(this, R.string.erro_ao_tentar_inserir);
+               return;
+           }
+           morador.setId(novoId);
+
+
+
+        } else {
+            morador.setId(moradorOriginal.getId());
+
+            int quantidadeAlterada = moradoresDatabase.getMoradorDao().update(morador);
+
+            if(quantidadeAlterada != 1){
+                UtilsAlert.mostrarAviso(this, R.string.erro_ao_tentar_alterar);
+                return;
+            }
+
+        }
+        salvarUltimoTipo(bloco);
+
+        intentResposta.putExtra(KEY_ID, morador.getId());
+
+//        intentResposta.putExtra(KEY_NOME, nome);
+
+
+//        intentResposta.putExtra(KEY_NUM, numApt);
+//        intentResposta.putExtra(KEY_ALUGADO, aptAlugado);
+//        intentResposta.putExtra(KEY_BLOCO, bloco);
+//        intentResposta.putExtra(KEY_GENERO, genero.toString());
 
         setResult(MoradoresActivity.RESULT_OK, intentResposta);
 

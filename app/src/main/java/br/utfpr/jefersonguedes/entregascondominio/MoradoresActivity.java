@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
@@ -30,6 +29,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import br.utfpr.jefersonguedes.entregascondominio.modelo.Genero;
+import br.utfpr.jefersonguedes.entregascondominio.modelo.Morador;
+import br.utfpr.jefersonguedes.entregascondominio.persistencia.MoradoresDatabase;
 import br.utfpr.jefersonguedes.entregascondominio.utils.UtilsAlert;
 
 public class MoradoresActivity extends AppCompatActivity {
@@ -57,7 +59,7 @@ public class MoradoresActivity extends AppCompatActivity {
     private MenuItem menuItemOrdenacao;
 
 
-    public static  final  boolean PADRAO_INICIAL_ORDENACAO_ASCENDENTE = true;
+    public static final boolean PADRAO_INICIAL_ORDENACAO_ASCENDENTE = true;
 
     private ActionMode.Callback actionCallback = new ActionMode.Callback() {
         @Override
@@ -79,11 +81,11 @@ public class MoradoresActivity extends AppCompatActivity {
 
             int idMenuItem = item.getItemId();
 
-            if(idMenuItem == R.id.menuItemEditar){
+            if (idMenuItem == R.id.menuItemEditar) {
                 editarMorador();
                 return true;
             } else {
-                if(idMenuItem == R.id.menuItemExcluir){
+                if (idMenuItem == R.id.menuItemExcluir) {
                     excluirMorador();
                     return true;
                 } else {
@@ -94,7 +96,7 @@ public class MoradoresActivity extends AppCompatActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            if (viewSelecionada != null){
+            if (viewSelecionada != null) {
                 viewSelecionada.setBackground(backgroundDrawable);
             }
 
@@ -130,7 +132,7 @@ public class MoradoresActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if(actionMode != null){
+                if (actionMode != null) {
                     return false;
                 }
 
@@ -156,18 +158,25 @@ public class MoradoresActivity extends AppCompatActivity {
         registerForContextMenu(listViewMoradores);
     }
 
-    private void popularMoradores(){
+    private void popularMoradores() {
 
-        moradores = new ArrayList<>();
+
+        MoradoresDatabase moradoresDatabase = MoradoresDatabase.getInstance(this);
+
+        if (ordenacaoAscendente) {
+            moradores = moradoresDatabase.getMoradorDao().queryAllAscending();
+        } else {
+            moradores = moradoresDatabase.getMoradorDao().queryAllDownward();
+        }
+
 
         moradorAdapter = new MoradorAdapter(this, moradores);
-
 
         listViewMoradores.setAdapter(moradorAdapter);
 
     }
 
-    public  void abrirSobre(){
+    public void abrirSobre() {
 
         Intent intentAbertura = new Intent(this, SobreActivity.class);
         startActivity(intentAbertura);
@@ -178,45 +187,48 @@ public class MoradoresActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                         if(result.getResultCode() == MoradoresActivity.RESULT_OK){
-                             Intent intent = result.getData();
-                                Bundle bundle = intent.getExtras();
-                                if(bundle != null){
-                                    String nome = bundle.getString(MoradorActivity.KEY_NOME);
-                                    int numApt = bundle.getInt(MoradorActivity.KEY_NUM);
-                                    boolean aptAlugado = bundle.getBoolean(MoradorActivity.KEY_ALUGADO);
-                                    int bloco = bundle.getInt(MoradorActivity.KEY_BLOCO);
-                                    String genero = bundle.getString(MoradorActivity.KEY_GENERO);
+                    if (result.getResultCode() == MoradoresActivity.RESULT_OK) {
+                        Intent intent = result.getData();
+                        Bundle bundle = intent.getExtras();
+                        if (bundle != null) {
+//                                    String nome = bundle.getString(MoradorActivity.KEY_NOME);
+//                                    int numApt = bundle.getInt(MoradorActivity.KEY_NUM);
+//                                    boolean aptAlugado = bundle.getBoolean(MoradorActivity.KEY_ALUGADO);
+//                                    int bloco = bundle.getInt(MoradorActivity.KEY_BLOCO);
+//                                    String genero = bundle.getString(MoradorActivity.KEY_GENERO);
+
+                            long id = bundle.getLong(MoradorActivity.KEY_ID);
+
+                            MoradoresDatabase database = MoradoresDatabase.getInstance(MoradoresActivity.this);
+                            Morador morador = database.getMoradorDao().queryForId(id);
+//                                    Morador morador = new Morador(nome, numApt, aptAlugado, bloco, Genero.valueOf(genero));
+
+                            moradores.add(morador);
+
+                            ordenarLista();
 
 
-                                    Morador morador = new Morador(nome, numApt, aptAlugado, bloco, Genero.valueOf(genero));
+                        }
 
-                                    moradores.add(morador);
-
-                                    ordenarLista();
-
-
-                                }
-
-                         }
-                         posicaoSelecionada = -1;
-                         if(actionMode != null){
-                            actionMode.finish();
-                         }
+                    }
+                    posicaoSelecionada = -1;
+                    if (actionMode != null) {
+                        actionMode.finish();
+                    }
 
                 }
             });
 
-    public void abrirNovoMorador(){
+    public void abrirNovoMorador() {
         Intent intent = new Intent(this, MoradorActivity.class);
         intent.putExtra(MoradorActivity.KEY_MODO, MoradorActivity.MODO_NOVO);
 
         launcherNovoMorador.launch(intent);
     }
 
-    private void excluirMorador(){
+    private void excluirMorador() {
 
-        Morador morador = moradores.get(posicaoSelecionada);
+        final Morador morador = moradores.get(posicaoSelecionada);
 
 //        String mensagem = getString(R.string.deseja_apagar) + morador.getNome() + "\"";
 
@@ -225,6 +237,16 @@ public class MoradoresActivity extends AppCompatActivity {
         DialogInterface.OnClickListener listenerSim = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                MoradoresDatabase database = MoradoresDatabase.getInstance(MoradoresActivity.this);
+
+                int quantidadeAlterada = database.getMoradorDao().delete(morador);
+
+                if (quantidadeAlterada != 1) {
+                    UtilsAlert.mostrarAviso(MoradoresActivity.this, R.string.erro_ao_tentar_excluir);
+                    return;
+                }
+
                 moradores.remove(posicaoSelecionada);
                 moradorAdapter.notifyDataSetChanged();
                 actionMode.finish();
@@ -240,39 +262,51 @@ public class MoradoresActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode() == MoradoresActivity.RESULT_OK){
+                    if (result.getResultCode() == MoradoresActivity.RESULT_OK) {
                         Intent intent = result.getData();
                         Bundle bundle = intent.getExtras();
-                        if(bundle != null){
-                            String nome = bundle.getString(MoradorActivity.KEY_NOME);
-                            int numApt = bundle.getInt(MoradorActivity.KEY_NUM);
-                            boolean aptAlugado = bundle.getBoolean(MoradorActivity.KEY_ALUGADO);
-                            int bloco = bundle.getInt(MoradorActivity.KEY_BLOCO);
-                            String generoTexto = bundle.getString(MoradorActivity.KEY_GENERO);
+                        if (bundle != null) {
 
-                            final Morador morador = moradores.get(posicaoSelecionada);
 
-                            final Morador cloneMoradorOriginal;
+                            final Morador moradorOriginal = moradores.get(posicaoSelecionada);
 
-                            try {
-                                cloneMoradorOriginal = (Morador) morador.clone();
-                            } catch (CloneNotSupportedException e) {
-                               e.printStackTrace();
-                               UtilsAlert.mostrarAviso(MoradoresActivity.this, R.string.erro_conversao_tipos);
-                                return;
-                            }
+                            long id = bundle.getLong(MoradorActivity.KEY_ID);
 
-                            morador.setNome(nome);
-                            morador.setNumApt(numApt);
-                            morador.setAptAlugado(aptAlugado);
-                            morador.setBloco(bloco);
+                            final MoradoresDatabase database = MoradoresDatabase.getInstance(MoradoresActivity.this);
+                            final Morador moradorEditado = database.getMoradorDao().queryForId(id);
 
-                            Genero genero = Genero.valueOf(generoTexto);
-                            morador.setGenero(genero);
 
-                           ordenarLista();
+//                            String nome = bundle.getString(MoradorActivity.KEY_NOME);
+//                            int numApt = bundle.getInt(MoradorActivity.KEY_NUM);
+//                            boolean aptAlugado = bundle.getBoolean(MoradorActivity.KEY_ALUGADO);
+//                            int bloco = bundle.getInt(MoradorActivity.KEY_BLOCO);
+//                            String generoTexto = bundle.getString(MoradorActivity.KEY_GENERO);
 
-                           final ConstraintLayout constraintLayout = findViewById(R.id.main);
+//                            final Morador morador = moradores.get(posicaoSelecionada);
+
+//                            final Morador cloneMoradorOriginal;
+//
+//                            try {
+//                                cloneMoradorOriginal = (Morador) morador.clone();
+//                            } catch (CloneNotSupportedException e) {
+//                                e.printStackTrace();
+//                                UtilsAlert.mostrarAviso(MoradoresActivity.this, R.string.erro_conversao_tipos);
+//                                return;
+//                            }
+
+//                            morador.setNome(nome);
+//                            morador.setNumApt(numApt);
+//                            morador.setAptAlugado(aptAlugado);
+//                            morador.setBloco(bloco);
+//
+//                            Genero genero = Genero.valueOf(generoTexto);
+//                            morador.setGenero(genero);
+
+                            moradores.set(posicaoSelecionada, moradorEditado);
+
+                            ordenarLista();
+
+                            final ConstraintLayout constraintLayout = findViewById(R.id.main);
 
                             Snackbar snackbar = Snackbar.make(constraintLayout,
                                     R.string.alteracao_realizada, Snackbar.LENGTH_LONG);
@@ -280,8 +314,16 @@ public class MoradoresActivity extends AppCompatActivity {
                             snackbar.setAction(R.string.desfazer, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    moradores.remove(morador);
-                                    moradores.add(cloneMoradorOriginal);
+
+                                    int quantidadeAlterada = database.getMoradorDao().update(moradorOriginal);
+
+                                    if (quantidadeAlterada != 1) {
+                                        UtilsAlert.mostrarAviso(MoradoresActivity.this, R.string.erro_ao_tentar_alterar);
+                                        return;
+                                    }
+
+                                    moradores.remove(moradorEditado);
+                                    moradores.add(moradorOriginal);
                                     ordenarLista();
                                 }
                             });
@@ -297,7 +339,7 @@ public class MoradoresActivity extends AppCompatActivity {
                 }
             });
 
-    private void editarMorador(){
+    private void editarMorador() {
 
 //        posicaoSelecionada = posicao;
 
@@ -306,12 +348,13 @@ public class MoradoresActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MoradorActivity.class);
 
         intent.putExtra(MoradorActivity.KEY_MODO, MoradorActivity.MODO_EDITAR);
+        intent.putExtra(MoradorActivity.KEY_ID, morador.getId());
 
-        intent.putExtra(MoradorActivity.KEY_NOME, morador.getNome());
-        intent.putExtra(MoradorActivity.KEY_NUM, morador.getNumApt());
-        intent.putExtra(MoradorActivity.KEY_ALUGADO, morador.isAptAlugado());
-        intent.putExtra(MoradorActivity.KEY_BLOCO, morador.getBloco());
-        intent.putExtra(MoradorActivity.KEY_GENERO, morador.getGenero().toString());
+//        intent.putExtra(MoradorActivity.KEY_NOME, morador.getNome());
+//        intent.putExtra(MoradorActivity.KEY_NUM, morador.getNumApt());
+//        intent.putExtra(MoradorActivity.KEY_ALUGADO, morador.isAptAlugado());
+//        intent.putExtra(MoradorActivity.KEY_BLOCO, morador.getBloco());
+//        intent.putExtra(MoradorActivity.KEY_GENERO, morador.getGenero().toString());
 
         launcherEditarMorador.launch(intent);
 
@@ -323,7 +366,7 @@ public class MoradoresActivity extends AppCompatActivity {
 
         menuItemOrdenacao = menu.findItem(R.id.menuItemOrdenacao);
 
-        return  true;
+        return true;
     }
 
     @Override
@@ -339,11 +382,11 @@ public class MoradoresActivity extends AppCompatActivity {
 
         int idMenuItem = item.getItemId();
 
-        if(idMenuItem == R.id.menuItemAdicionar){
+        if (idMenuItem == R.id.menuItemAdicionar) {
             abrirNovoMorador();
             return true;
         } else {
-            if(idMenuItem == R.id.menuItemSobre){
+            if (idMenuItem == R.id.menuItemSobre) {
                 abrirSobre();
                 return true;
             } else if (idMenuItem == R.id.menuItemOrdenacao) {
@@ -362,33 +405,33 @@ public class MoradoresActivity extends AppCompatActivity {
 
     }
 
-    private void ordenarLista(){
-        if(ordenacaoAscendente){
-          Collections.sort(moradores, Morador.ordenacaoCrescente);
-        }else{
-          Collections.sort(moradores, Morador.ordenacaoDecrescente);
+    private void ordenarLista() {
+        if (ordenacaoAscendente) {
+            Collections.sort(moradores, Morador.ordenacaoCrescente);
+        } else {
+            Collections.sort(moradores, Morador.ordenacaoDecrescente);
         }
 
         moradorAdapter.notifyDataSetChanged();
     }
 
-    private void atualizarIconeOrdenacao(){
-        if(ordenacaoAscendente){
+    private void atualizarIconeOrdenacao() {
+        if (ordenacaoAscendente) {
             menuItemOrdenacao.setIcon(R.drawable.ic_action_ascending_order);
 
-        }else{
+        } else {
             menuItemOrdenacao.setIcon(R.drawable.ic_action_descending_order);
         }
     }
 
-    private void lerPreferencias(){
+    private void lerPreferencias() {
         SharedPreferences sharedPreferences = getSharedPreferences(MoradoresActivity.ARQUIVOS_PREFERENCIAS, Context.MODE_PRIVATE);
 
         ordenacaoAscendente = sharedPreferences.getBoolean(KEY_ORDENACAO_ASCENDENTE, ordenacaoAscendente);
 
     }
 
-    private void salvarPreferenciaOrdenacao(boolean novoValor){
+    private void salvarPreferenciaOrdenacao(boolean novoValor) {
         SharedPreferences sharedPreferences = getSharedPreferences(MoradoresActivity.ARQUIVOS_PREFERENCIAS, Context.MODE_PRIVATE);
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -400,7 +443,7 @@ public class MoradoresActivity extends AppCompatActivity {
         ordenacaoAscendente = novoValor;
     }
 
-    private void confirmarRestaurarPadroes(){
+    private void confirmarRestaurarPadroes() {
         DialogInterface.OnClickListener listenerSim = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -419,7 +462,7 @@ public class MoradoresActivity extends AppCompatActivity {
     }
 
 
-    private void restaurarPadroes(){
+    private void restaurarPadroes() {
 
         SharedPreferences sharedPreferences = getSharedPreferences(MoradoresActivity.ARQUIVOS_PREFERENCIAS, Context.MODE_PRIVATE);
 
