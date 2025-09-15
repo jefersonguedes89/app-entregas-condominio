@@ -10,17 +10,19 @@ import br.utfpr.jefersonguedes.entregascondominio.modelo.Morador;
 
 @Database(entities = {Morador.class}, version = 1, exportSchema = false)
 public abstract class MoradoresDatabase extends RoomDatabase {
-    public abstract MoradorDao geMoradorDao();
+    public abstract MoradorDao getMoradorDao();
 
     private static MoradoresDatabase INSTANCE;
 
-    public static MoradoresDatabase getInstance(final Context context){
-        if(INSTANCE != null){
-            synchronized (MoradoresDatabase.class){
-                if(INSTANCE != null){
-                    INSTANCE = Room.databaseBuilder(context,
-                                                    MoradoresDatabase.class,
-                                              "moradores.db").allowMainThreadQueries().build();
+    public static MoradoresDatabase getInstance(final Context context) {
+        if (INSTANCE == null) {  // <-- corrige aqui
+            synchronized (MoradoresDatabase.class) {
+                if (INSTANCE == null) {  // <-- corrige aqui também
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                                    MoradoresDatabase.class,
+                                    "moradores.db")
+                            .allowMainThreadQueries()
+                            .build();
                 }
             }
         }
