@@ -5,10 +5,12 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import br.utfpr.jefersonguedes.entregascondominio.modelo.Morador;
 
 @Database(entities = {Morador.class}, version = 1, exportSchema = false)
+@TypeConverters({ConverterGenero.class})
 public abstract class MoradoresDatabase extends RoomDatabase {
     public abstract MoradorDao getMoradorDao();
 
