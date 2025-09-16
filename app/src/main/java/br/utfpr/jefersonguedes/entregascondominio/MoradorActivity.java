@@ -1,5 +1,6 @@
 package br.utfpr.jefersonguedes.entregascondominio;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -21,10 +23,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.time.LocalDate;
+
 import br.utfpr.jefersonguedes.entregascondominio.modelo.Genero;
 import br.utfpr.jefersonguedes.entregascondominio.modelo.Morador;
 import br.utfpr.jefersonguedes.entregascondominio.persistencia.MoradoresDatabase;
 import br.utfpr.jefersonguedes.entregascondominio.utils.UtilsAlert;
+import br.utfpr.jefersonguedes.entregascondominio.utils.UtilsLocalDate;
 
 
 public class MoradorActivity extends AppCompatActivity {
@@ -36,7 +41,6 @@ public class MoradorActivity extends AppCompatActivity {
 //    public static final String KEY_GENERO = "KEY_GENERO";
 
 
-
     public static final String KEY_MODO = "KEY_MODO";
     public static final String KEY_ID = "ID";
     public static final String KEY_SUGERIR_TIPO = "SUGERIR_TIPO";
@@ -44,7 +48,7 @@ public class MoradorActivity extends AppCompatActivity {
     public static final int MODO_NOVO = 0;
 
     public static final int MODO_EDITAR = 1;
-    private EditText editTextNome, editTextNumApt;
+    private EditText editTextNome, editTextNumApt, editTextDataNascimento;
     private CheckBox checkBoxAptAlugado;
     private RadioGroup radioGroupGenero;
     private Spinner spinnerBlocos;
@@ -59,6 +63,10 @@ public class MoradorActivity extends AppCompatActivity {
 
     private int ultimoTipo = 0;
 
+    private LocalDate dataNascimento;
+
+    private int anosParaTras;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +75,8 @@ public class MoradorActivity extends AppCompatActivity {
 
         editTextNome = findViewById(R.id.editTextNome);
         editTextNumApt = findViewById(R.id.editTextNumApt);
+        editTextDataNascimento = findViewById(R.id.editTextDataNascimento);
+
         checkBoxAptAlugado = findViewById(R.id.checkBoxAptAlugado);
         radioGroupGenero = findViewById(R.id.radioGroupGenero);
         spinnerBlocos = findViewById(R.id.spinnerBlocos);
@@ -75,22 +85,40 @@ public class MoradorActivity extends AppCompatActivity {
 
         radioButtonMasc = findViewById(R.id.radioButtonMasc);
 
+        editTextDataNascimento.setFocusable(false);
+
+        editTextDataNascimento.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mostrarDatePickerDiolog();
+            }
+        });
+
         lerPreferencias();
+
+        anosParaTras = getResources().getInteger(R.integer.anos_para_tras);
+
+        dataNascimento = LocalDate.now().minusYears(anosParaTras);
 
         Intent intent = getIntent();
 
         Bundle bundle = intent.getExtras();
-        if(bundle != null){
+
+
+
+        if (bundle != null) {
             modo = bundle.getInt(KEY_MODO);
 
-            if(modo == MODO_NOVO){
+            if (modo == MODO_NOVO) {
                 setTitle(getString(R.string.novo_morador));
 
-                if(sugerirTipo){
+                if (sugerirTipo) {
                     spinnerBlocos.setSelection(ultimoTipo);
                 }
 
-            }else{
+
+
+            } else {
                 setTitle(getString(R.string.editar_morador));
 
                 long id = bundle.getLong(KEY_ID);
@@ -107,15 +135,24 @@ public class MoradorActivity extends AppCompatActivity {
 //                moradorOriginal = new Morador(nome, numApt, aptAlugado, bloco, genero);
 
 
-
                 editTextNome.setText(moradorOriginal.getNome());
                 editTextNumApt.setText(String.valueOf(moradorOriginal.getNumApt()));
+
+
+
+                if (moradorOriginal.getDataNascimento() != null) {
+                    dataNascimento = moradorOriginal.getDataNascimento();
+                }
+
+                editTextDataNascimento.setText(UtilsLocalDate.formatLocalDate(dataNascimento));
+
+
                 checkBoxAptAlugado.setChecked(moradorOriginal.isAptAlugado());
                 spinnerBlocos.setSelection(moradorOriginal.getBloco());
 
                 Genero genero = moradorOriginal.getGenero();
 
-                if(genero == Genero.Masculino){
+                if (genero == Genero.Masculino) {
                     radioButtonMasc.setChecked(true);
                 } else {
                     radioButtonFem.setChecked(true);
@@ -128,11 +165,42 @@ public class MoradorActivity extends AppCompatActivity {
 
     }
 
-    public void limparCampos(){
+    private void mostrarDatePickerDiolog() {
+
+        DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                dataNascimento = LocalDate.of(year, month + 1, dayOfMonth);
+
+                editTextDataNascimento.setText(UtilsLocalDate.formatLocalDate(dataNascimento));
+            }
+        };
+
+
+
+        DatePickerDialog picker = new DatePickerDialog(this,
+                R.style.SpinnerDatePickerDialogTheme,
+                listener,
+                dataNascimento.getYear(),
+                dataNascimento.getMonthValue() - 1,
+                dataNascimento.getDayOfMonth());
+
+
+        long dataMaximaMilis = UtilsLocalDate.toMillissegundos(LocalDate.now());
+
+        picker.getDatePicker().setMaxDate(dataMaximaMilis);
+        picker.show();
+
+    }
+
+    public void limparCampos() {
 
 
         final String nome = editTextNome.getText().toString();
         final String numApt = editTextNumApt.getText().toString();
+
+        final LocalDate dataNascimentoAnterior = dataNascimento;
+
         final boolean aptAlugado = checkBoxAptAlugado.isChecked();
         final int radioButtonId = radioGroupGenero.getCheckedRadioButtonId();
         final int bloco = spinnerBlocos.getSelectedItemPosition();
@@ -142,9 +210,10 @@ public class MoradorActivity extends AppCompatActivity {
         final View viewComFoco = scrollView.findFocus();
 
 
-
         editTextNome.setText(null);
         editTextNumApt.setText(null);
+        editTextDataNascimento.setText(null);
+        dataNascimento = LocalDate.now().minusYears(anosParaTras);
         checkBoxAptAlugado.setChecked(false);
         editTextNome.requestFocus();
         radioGroupGenero.clearCheck();
@@ -158,9 +227,13 @@ public class MoradorActivity extends AppCompatActivity {
             public void onClick(View v) {
                 editTextNome.setText(nome);
                 editTextNumApt.setText(numApt);
+
+                dataNascimento = dataNascimentoAnterior;
+                editTextDataNascimento.setText(UtilsLocalDate.formatLocalDate(dataNascimento));
+
                 checkBoxAptAlugado.setChecked(aptAlugado);
 
-                if(radioButtonId == R.id.radioButtonMasc){
+                if (radioButtonId == R.id.radioButtonMasc) {
                     radioButtonMasc.setChecked(true);
                 } else {
                     radioButtonFem.setChecked(true);
@@ -168,7 +241,7 @@ public class MoradorActivity extends AppCompatActivity {
 
                 spinnerBlocos.setSelection(bloco);
 
-                if(viewComFoco != null){
+                if (viewComFoco != null) {
                     viewComFoco.requestFocus();
                 }
 
@@ -184,10 +257,9 @@ public class MoradorActivity extends AppCompatActivity {
     }
 
 
-
-    public void salvarValores(){
+    public void salvarValores() {
         String nome = editTextNome.getText().toString();
-        if(nome == null || nome.trim().isEmpty()){
+        if (nome == null || nome.trim().isEmpty()) {
             UtilsAlert.mostrarAviso(this, R.string.por_favor_digite_o_nome_do_morador);
 
 
@@ -214,8 +286,25 @@ public class MoradorActivity extends AppCompatActivity {
 
         nome = nome.trim();
 
+
+        String dataNascimentoString = editTextDataNascimento.getText().toString();
+        if (dataNascimentoString == null || dataNascimentoString.trim().isEmpty()) {
+
+            UtilsAlert.mostrarAviso(this, R.string.faltou_entrar_com_data_nascimento);
+
+            return;
+        }
+
+        int idade = UtilsLocalDate.diferencaEmAnosParaHoje(dataNascimento);
+
+        if(idade < 0 || idade > 100){
+           UtilsAlert.mostrarAviso(this, R.string.data_nascimento_invalida);
+           return;
+        }
+
+
         String numAptString = editTextNumApt.getText().toString();
-        if(numAptString == null || numAptString.trim().isEmpty()){
+        if (numAptString == null || numAptString.trim().isEmpty()) {
 
             UtilsAlert.mostrarAviso(this, R.string.por_favor_digite_o_n_mero_do_apartamento);
 
@@ -229,7 +318,7 @@ public class MoradorActivity extends AppCompatActivity {
         int numApt = 0;
         try {
             numApt = Integer.parseInt(numAptString);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
 
             UtilsAlert.mostrarAviso(this, R.string.o_n_mero_deve_ser_um_inteiro);
 
@@ -239,7 +328,7 @@ public class MoradorActivity extends AppCompatActivity {
             editTextNumApt.requestFocus();
             return;
         }
-        if(numApt < 0){
+        if (numApt < 0) {
 
             UtilsAlert.mostrarAviso(this, R.string.n_o_permitido_valores_menores_que_zero);
 
@@ -256,11 +345,11 @@ public class MoradorActivity extends AppCompatActivity {
         Genero genero;
 
 
-        if(radioButtonId == R.id.radioButtonFem){
+        if (radioButtonId == R.id.radioButtonFem) {
             genero = Genero.Feminino;
         } else if (radioButtonId == R.id.radioButtonMasc) {
             genero = Genero.Masculino;
-        }  else {
+        } else {
 
             UtilsAlert.mostrarAviso(this, R.string.por_favor_informe_o_g_nero_do_morador);
 
@@ -270,7 +359,7 @@ public class MoradorActivity extends AppCompatActivity {
         }
 
         int bloco = spinnerBlocos.getSelectedItemPosition();
-        if(bloco == AdapterView.INVALID_POSITION){
+        if (bloco == AdapterView.INVALID_POSITION) {
 
             UtilsAlert.mostrarAviso(this, R.string.n_o_foi_carregado_o_spinner_com_os_blocos);
 
@@ -281,14 +370,13 @@ public class MoradorActivity extends AppCompatActivity {
 
         boolean aptAlugado = checkBoxAptAlugado.isChecked();
 
-        Morador morador = new Morador(nome, numApt, aptAlugado, bloco, genero);
+        Morador morador = new Morador(nome, numApt, aptAlugado, bloco, genero, dataNascimento);
 
-        if(morador.equals(moradorOriginal)){
+        if (morador.equals(moradorOriginal)) {
             setResult(MoradorActivity.RESULT_CANCELED);
             finish();
             return;
         }
-
 
 
 //        if(modo == MODO_EDITAR &&
@@ -306,15 +394,14 @@ public class MoradorActivity extends AppCompatActivity {
         Intent intentResposta = new Intent();
 
         MoradoresDatabase moradoresDatabase = MoradoresDatabase.getInstance(this);
-        if(modo == MODO_NOVO){
-           long novoId =  moradoresDatabase.getMoradorDao().insert(morador);
+        if (modo == MODO_NOVO) {
+            long novoId = moradoresDatabase.getMoradorDao().insert(morador);
 
-           if(novoId <= 0) {
-               UtilsAlert.mostrarAviso(this, R.string.erro_ao_tentar_inserir);
-               return;
-           }
-           morador.setId(novoId);
-
+            if (novoId <= 0) {
+                UtilsAlert.mostrarAviso(this, R.string.erro_ao_tentar_inserir);
+                return;
+            }
+            morador.setId(novoId);
 
 
         } else {
@@ -322,7 +409,7 @@ public class MoradorActivity extends AppCompatActivity {
 
             int quantidadeAlterada = moradoresDatabase.getMoradorDao().update(morador);
 
-            if(quantidadeAlterada != 1){
+            if (quantidadeAlterada != 1) {
                 UtilsAlert.mostrarAviso(this, R.string.erro_ao_tentar_alterar);
                 return;
             }
@@ -367,35 +454,34 @@ public class MoradorActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int idMenuItem = item.getItemId();
 
-        if(idMenuItem == R.id.menuItemSalvar){
+        if (idMenuItem == R.id.menuItemSalvar) {
             salvarValores();
             return true;
         } else {
-            if(idMenuItem == R.id.menuItemLimpar){
+            if (idMenuItem == R.id.menuItemLimpar) {
                 limparCampos();
                 return true;
-            } else
-                if (idMenuItem == R.id.menuItemSugerirTipo) {
+            } else if (idMenuItem == R.id.menuItemSugerirTipo) {
 
-                    boolean valor = !item.isChecked();
+                boolean valor = !item.isChecked();
 
-                    salvarSugerirTipo(valor);
+                salvarSugerirTipo(valor);
 
-                    item.setChecked(valor);
+                item.setChecked(valor);
 
-                    if(sugerirTipo){
-                        spinnerBlocos.setSelection(ultimoTipo);
-                    }
+                if (sugerirTipo) {
+                    spinnerBlocos.setSelection(ultimoTipo);
+                }
 
-                    return  true;
-                } else {
+                return true;
+            } else {
                 return super.onOptionsItemSelected(item);
             }
 
         }
     }
 
-    private void lerPreferencias(){
+    private void lerPreferencias() {
         SharedPreferences sharedPreferences = getSharedPreferences(MoradoresActivity.ARQUIVOS_PREFERENCIAS, Context.MODE_PRIVATE);
 
         sugerirTipo = sharedPreferences.getBoolean(KEY_SUGERIR_TIPO, sugerirTipo);
@@ -404,7 +490,7 @@ public class MoradorActivity extends AppCompatActivity {
 
     }
 
-    private void salvarSugerirTipo(boolean novoValor){
+    private void salvarSugerirTipo(boolean novoValor) {
         SharedPreferences sharedPreferences = getSharedPreferences(MoradoresActivity.ARQUIVOS_PREFERENCIAS, Context.MODE_PRIVATE);
 
         SharedPreferences.Editor edit = sharedPreferences.edit();
@@ -416,7 +502,7 @@ public class MoradorActivity extends AppCompatActivity {
         sugerirTipo = novoValor;
     }
 
-    private void salvarUltimoTipo(int novoValor){
+    private void salvarUltimoTipo(int novoValor) {
         SharedPreferences sharedPreferences = getSharedPreferences(MoradoresActivity.ARQUIVOS_PREFERENCIAS, Context.MODE_PRIVATE);
 
         SharedPreferences.Editor edit = sharedPreferences.edit();

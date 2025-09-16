@@ -63,6 +63,10 @@
     <string name="erro_ao_tentar_inserir">Error trying to insert!</string>
     <string name="erro_ao_tentar_alterar">Error trying to update!</string>
     <string name="erro_ao_tentar_excluir">Error trying to delete!</string>
+    <string name="data_nascimento">Birthdate</string>
+    <string name="faltou_entrar_com_data_nascimento">The birthdate cannot be empty!</string>
+    <string name="data_nascimento_invalida">Age needs to be 1 to 100 years!</string>
+    <string name="data_nascimento_valor">Birthdate:</string>
 
 
 </resources>

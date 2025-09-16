@@ -12,6 +12,17 @@
 
     </style>
 
+    <style name="SpinnerDatePickerDialogTheme" parent="Theme.Material3.Light">
+        <item name="android:datePickerStyle">@style/SpinnerDatePickerStyle</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <style name="SpinnerDatePickerStyle" parent="android:Widget.Material.DatePicker">
+        <!-- Força modo spinner -->
+        <item name="android:datePickerMode">spinner</item>
+        <!-- Esconde o calendário, mostra só o spinner -->
+        <item name="android:calendarViewShown">false</item>
+    </style>
 
     <color name="corSelecionada">@color/amarelo_tranparente</color>
 </resources>
