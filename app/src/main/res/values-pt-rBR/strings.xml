@@ -64,4 +64,16 @@
     <string name="erro_ao_tentar_inserir">Erro na tentativa de inserir!</string>
     <string name="erro_ao_tentar_alterar">Erro na tentativa de atualizar!</string>
     <string name="erro_ao_tentar_excluir">Erro na tentativa de excluir!</string>
+    <string name="data_nascimento">Data de nascimento</string>
+    <string name="faltou_entrar_com_data_nascimento">Entre com a data de nascimento!</string>
+    <string name="data_nascimento_invalida">A idade tem que ser entre 1 a 100 anos!</string>
+    <string name="data_nascimento_valor">Data de nascimento:</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="entregas_do_morador">Entregas de %1$s</string>
+    <string name="o_campo_nao_pode_ser_vazio">O campo não pode ser vazio!</string>
+    <string name="nova_entrega">Nova entrega</string>
+    <string name="editar_entrega">Editar Entrega</string>
+    <string name="entregas">Entregas (%1$d)</string>
+    <string name="retirada">Entregue</string>
+    <string name="retirada_item">Retirada: -</string>
 </resources>

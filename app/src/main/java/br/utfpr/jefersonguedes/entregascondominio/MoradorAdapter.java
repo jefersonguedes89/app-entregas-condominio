@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import br.utfpr.jefersonguedes.entregascondominio.modelo.Morador;
+import br.utfpr.jefersonguedes.entregascondominio.utils.UtilsLocalDate;
 
 public class MoradorAdapter extends BaseAdapter {
 
@@ -23,6 +24,8 @@ public class MoradorAdapter extends BaseAdapter {
     private static class MoradorHolder {
         public TextView textViewValorNome;
         public TextView textViewNumApt;
+
+        public TextView textViewValorDataNascimento;
 
         public TextView textViewValorAptAlugado;
 
@@ -65,6 +68,7 @@ public class MoradorAdapter extends BaseAdapter {
 
             holder = new MoradorHolder();
             holder.textViewValorNome = convertView.findViewById(R.id.textViewValorNome);
+            holder.textViewValorDataNascimento = convertView.findViewById(R.id.textViewValorDataNascimento);
             holder.textViewNumApt = convertView.findViewById(R.id.textViewValorNumApt);
             holder.textViewValorNumBloco = convertView.findViewById(R.id.textViewValorBloco);
             holder.textViewValorGenero = convertView.findViewById(R.id.textViewValorGenero);
@@ -79,6 +83,7 @@ public class MoradorAdapter extends BaseAdapter {
         Morador morador = moradorList.get(position);
 
         holder.textViewValorNome.setText(morador.getNome());
+        holder.textViewValorDataNascimento.setText(UtilsLocalDate.formatLocalDate(morador.getDataNascimento()));
         holder.textViewNumApt.setText(String.valueOf(morador.getNumApt()));
         if(morador.isAptAlugado()){
             holder.textViewValorAptAlugado.setText(R.string.sim);

@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -42,13 +43,16 @@ public class Morador implements Cloneable{
 
     private Genero genero;
 
+    private LocalDate dataNascimento;
 
-    public Morador(String nome, int numApt, boolean aptAlugado, int bloco, Genero genero) {
+
+    public Morador(String nome, int numApt, boolean aptAlugado, int bloco, Genero genero, LocalDate dataNascimento) {
         this.nome = nome;
         this.numApt = numApt;
         this.aptAlugado = aptAlugado;
         this.bloco = bloco;
         this.genero = genero;
+        this.dataNascimento = dataNascimento;
     }
 
     public long getId() {
@@ -99,10 +103,13 @@ public class Morador implements Cloneable{
         this.genero = genero;
     }
 
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
+    }
 
-
-
-
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
 
     @NonNull
     @Override
@@ -117,7 +124,17 @@ public class Morador implements Cloneable{
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
+
         Morador morador = (Morador) o;
+
+        if(dataNascimento == null && morador.dataNascimento != null){
+            return false;
+        }
+
+        if(dataNascimento != null && dataNascimento.equals(morador.getDataNascimento()) == false){
+            return false;
+        }
+
         return numApt == morador.numApt
                 && aptAlugado == morador.aptAlugado
                 && bloco == morador.bloco
@@ -127,7 +144,7 @@ public class Morador implements Cloneable{
 
     @Override
     public int hashCode() {
-        return Objects.hash(nome, numApt, aptAlugado, bloco, genero);
+        return Objects.hash(nome, numApt, aptAlugado, bloco, genero, dataNascimento);
     }
 
     @Override
@@ -136,6 +153,7 @@ public class Morador implements Cloneable{
                 numApt + "\n" +
                 aptAlugado + "\n" +
                 bloco + "\n" +
+                dataNascimento + "\n" +
                 genero;
     }
 }
