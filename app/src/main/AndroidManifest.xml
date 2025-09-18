@@ -12,15 +12,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ThemeStylesIcons">
         <activity
+            android:name=".EntregasActivity"
+            android:exported="false"
+            android:parentActivityName=".MoradorActivity"/>
+        <activity
             android:name=".SobreActivity"
             android:exported="false"
-            android:parentActivityName=".MoradoresActivity"/>
+            android:parentActivityName=".MoradoresActivity" />
         <activity
             android:name=".MoradorActivity"
             android:exported="false"
-            android:parentActivityName=".MoradorActivity">
-
-        </activity>
+            android:parentActivityName=".MoradorActivity"></activity>
         <activity
             android:name=".MoradoresActivity"
             android:exported="true"

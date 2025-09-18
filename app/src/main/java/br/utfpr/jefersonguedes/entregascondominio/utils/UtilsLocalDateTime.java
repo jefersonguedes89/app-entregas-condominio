@@ -1,20 +1,17 @@
 package br.utfpr.jefersonguedes.entregascondominio.utils;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
+import java.time.LocalDateTime;
 import java.time.chrono.IsoChronology;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 
-public final class UtilsLocalDate {
+public final class UtilsLocalDateTime {
 
     public static DateTimeFormatter formatter;
     private static Locale localeUsado;
-
-    private UtilsLocalDate(){
+    private UtilsLocalDateTime(){
 
     }
 
@@ -33,13 +30,14 @@ public final class UtilsLocalDate {
         formatPattern = formatPattern.replaceAll("\\bM\\b", "MM");
 
         formatPattern = formatPattern.replaceAll("\\bd\\b", "dd");
+        formatPattern += " HH:mm:ss";
 
         formatter = DateTimeFormatter.ofPattern(formatPattern, Locale.getDefault());
     }
 
 
-    public static String formatLocalDate(LocalDate date){
-        if(date == null){
+    public static String formatLocalDateTime(LocalDateTime dateTime){
+        if(dateTime == null){
             return null;
         }
 
@@ -47,31 +45,9 @@ public final class UtilsLocalDate {
             inicializaFormatter();
         }
 
-        return date.format(formatter);
-
-    }
-
-    public static long toMillissegundos(LocalDate date){
-        if(date == null){
-            return 0;
-        }
-        return date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
-    }
+        return dateTime.format(formatter);
 
 
-    public static int diferencaEmAnos(LocalDate date1, LocalDate date2){
-        if(date1 == null || date2 == null){
-            return 0;
-        }
-        Period periodo = Period.between(date1, date2);
-
-        return periodo.getYears();
-
-    }
-
-
-    public static int diferencaEmAnosParaHoje(LocalDate date){
-        return diferencaEmAnos(date, LocalDate.now());
     }
 
 

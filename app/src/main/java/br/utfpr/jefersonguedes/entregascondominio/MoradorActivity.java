@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -18,6 +19,10 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -67,6 +72,8 @@ public class MoradorActivity extends AppCompatActivity {
 
     private int anosParaTras;
 
+    private Button buttonEntregas;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +93,8 @@ public class MoradorActivity extends AppCompatActivity {
         radioButtonMasc = findViewById(R.id.radioButtonMasc);
 
         editTextDataNascimento.setFocusable(false);
+
+        buttonEntregas = findViewById(R.id.buttonEntregas);
 
         editTextDataNascimento.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +124,8 @@ public class MoradorActivity extends AppCompatActivity {
                 if (sugerirTipo) {
                     spinnerBlocos.setSelection(ultimoTipo);
                 }
+
+                buttonEntregas.setVisibility(View.INVISIBLE);
 
 
 
@@ -159,6 +170,10 @@ public class MoradorActivity extends AppCompatActivity {
                 }
                 editTextNome.requestFocus();
                 editTextNome.setSelection(editTextNome.getText().length());
+
+                int totalEntregas = database.getEntregaDao().totalIdMorador(moradorOriginal.getId());
+                buttonEntregas.setText(getString(R.string.entregas, totalEntregas));
+
             }
 
         }
@@ -513,6 +528,29 @@ public class MoradorActivity extends AppCompatActivity {
 
         ultimoTipo = novoValor;
     }
+
+    ActivityResultLauncher<Intent> launcherEntregas = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult o) {
+            MoradoresDatabase database = MoradoresDatabase.getInstance(MoradorActivity.this);
+            int totalEntregas = database.getEntregaDao().totalIdMorador(moradorOriginal.getId());
+            buttonEntregas.setText(getString(R.string.entregas, totalEntregas));
+
+        }
+    });
+
+
+    public void abrirEntregas(View view){
+        Intent intentAbertura = new Intent(this, EntregasActivity.class);
+        intentAbertura.putExtra(EntregasActivity.KEY_ID_MORADOR, moradorOriginal.getId());
+
+        launcherEntregas.launch(intentAbertura);
+
+    }
+
+
+
 
 
 }

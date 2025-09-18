@@ -25,11 +25,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import br.utfpr.jefersonguedes.entregascondominio.modelo.Genero;
 import br.utfpr.jefersonguedes.entregascondominio.modelo.Morador;
 import br.utfpr.jefersonguedes.entregascondominio.persistencia.MoradoresDatabase;
 import br.utfpr.jefersonguedes.entregascondominio.utils.UtilsAlert;
@@ -66,7 +64,7 @@ public class MoradoresActivity extends AppCompatActivity {
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 
             MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.moradores_item_selecionado, menu);
+            inflater.inflate(R.menu.item_selecionado, menu);
 
             return true;
         }

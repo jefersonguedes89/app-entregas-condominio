@@ -7,12 +7,15 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
+import br.utfpr.jefersonguedes.entregascondominio.modelo.Entrega;
 import br.utfpr.jefersonguedes.entregascondominio.modelo.Morador;
 
-@Database(entities = {Morador.class}, version = 2)
-@TypeConverters({ConverterGenero.class, ConverterLocalDate.class})
+@Database(entities = {Morador.class, Entrega.class}, version = 3)
+@TypeConverters({ConverterGenero.class, ConverterLocalDate.class, ConverterLocalDateTime.class})
 public abstract class MoradoresDatabase extends RoomDatabase {
     public abstract MoradorDao getMoradorDao();
+
+    public abstract EntregaDao getEntregaDao();
 
     private static MoradoresDatabase INSTANCE;
 
@@ -30,6 +33,7 @@ public abstract class MoradoresDatabase extends RoomDatabase {
                     builder.allowMainThreadQueries();
                     builder.addMigrations(new Migrar_1_2());
 
+                    builder.addMigrations(new Migrar_2_3());
                     INSTANCE = (MoradoresDatabase) builder.build();
 
 

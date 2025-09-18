@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">EntregasCondominio</string>
 
-    <string name="site_utfpr" translatable="false"><a href = "https://www.utfpr.edu.br/">Site UTFPR</a></string>
+    <string name="site_utfpr" translatable="false"><a href="https://www.utfpr.edu.br/">Site UTFPR</a></string>
     <string name="email" translatable="false">jefersonguedes89@gmail.com</string>
     <string name="cadastro_morador">"Resident Registration "</string>
     <string name="nome">" Name:"</string>
@@ -67,6 +67,14 @@
     <string name="faltou_entrar_com_data_nascimento">The birthdate cannot be empty!</string>
     <string name="data_nascimento_invalida">Age needs to be 1 to 100 years!</string>
     <string name="data_nascimento_valor">Birthdate:</string>
+    <string name="cancelar">Cancel</string>
+    <string name="entregas_do_morador">Deliveries of %1$s</string>
+    <string name="o_campo_nao_pode_ser_vazio">the field cannot be empty</string>
+    <string name="nova_entrega">New delivery</string>
+    <string name="editar_entrega">Edit delivery</string>
+    <string name="entregas">Deliveries (%1$d)</string>
+    <string name="retirada">Delivered</string>
+    <string name="retirada_item">Delivered: -</string>
 
 
 </resources>
